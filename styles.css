@@ -1,0 +1,225 @@
+:root {
+  color-scheme: dark;
+  --poster-duration: 3.6s;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: #080611;
+}
+
+.poster-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 28%, #2a1133, #080611 72%);
+}
+
+.poster {
+  position: relative;
+  width: min(96vw, 96dvh);
+  height: min(96vw, 96dvh);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.gta-poster-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+}
+
+.gta-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+  will-change: transform, opacity, filter, clip-path;
+  transition: filter 0.2s ease;
+}
+
+.gta-hotspot {
+  position: absolute;
+  z-index: 12;
+  pointer-events: auto;
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.gta-hotspot:focus-visible {
+  outline: 2px solid #fc7c9f;
+  outline-offset: 4px;
+}
+
+.gta-poster-stage:has(.gta-hotspot--gal:hover) .gta-layer--gal,
+.gta-poster-stage:has(.gta-hotspot--gal:focus-visible) .gta-layer--gal,
+.gta-poster-stage:has(.gta-hotspot--raul:hover) .gta-layer--raul,
+.gta-poster-stage:has(.gta-hotspot--raul:focus-visible) .gta-layer--raul {
+  filter: drop-shadow(0 0 18px rgb(252 124 159 / 0.55)) brightness(1.06);
+}
+
+.gta-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2cqw;
+  color: #fff;
+  font-family: "Pricedown Bl", Impact, "Arial Black", sans-serif;
+  font-weight: 900;
+  font-size: 9.8cqw;
+  line-height: 0.86;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-transform: lowercase;
+  -webkit-text-stroke: 0.9cqw #000;
+  paint-order: stroke fill;
+  text-shadow:
+    0 0.5cqw 1.6cqw rgb(8 6 17 / 0.9),
+    0 0 3cqw rgb(252 124 159 / 0.35);
+}
+
+.gta-wordmark__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.gta-wordmark__link:hover,
+.gta-wordmark__link:focus-visible {
+  transform: scale(1.03);
+  filter: drop-shadow(0 0 1.4cqw rgb(252 124 159 / 0.55));
+  outline: none;
+}
+
+.replay-button {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.1);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.replay-button:hover {
+  background: rgb(255 255 255 / 0.2);
+}
+
+.replay-button:active {
+  transform: scale(0.98);
+}
+
+.replay-button svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.poster.is-playing .gta-poster-stage {
+  animation: gta-camera-in var(--poster-duration) cubic-bezier(0.33, 0, 0.2, 1) both;
+}
+
+.poster.is-playing .gta-layer {
+  animation:
+    gta-layer-scale var(--poster-duration) cubic-bezier(0.16, 1, 0.3, 1) both,
+    gta-layer-fade 0.7s ease-out var(--reveal-delay, 0s) both;
+}
+
+.poster.is-playing .gta-layer--logo {
+  animation:
+    gta-layer-scale var(--poster-duration) cubic-bezier(0.16, 1, 0.3, 1) both,
+    gta-logo-reveal 4s cubic-bezier(0.16, 1.12, 0.3, 1) 0.8s both;
+}
+
+@keyframes gta-camera-in {
+  from {
+    opacity: 0;
+    transform: scale(1.14);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gta-layer-scale {
+  from {
+    transform: scale(var(--initial-scale, 1));
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes gta-layer-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gta-logo-reveal {
+  from {
+    clip-path: inset(0% 0% 100% 0%);
+    filter: blur(4px);
+  }
+  to {
+    clip-path: inset(0% 0% 0% 0%);
+    filter: blur(0px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .gta-poster-stage,
+  .gta-layer {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0% 0% 0% 0%);
+    filter: none;
+  }
+}

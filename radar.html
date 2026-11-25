@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080611">
+    <meta name="description" content="Radar — priyantar jonak's daily notes on building, learning, and random interests.">
+    <title>radar — priyantar jonak</title>
+    <link href="https://fonts.cdnfonts.com/css/pricedown" rel="stylesheet">
+    <style>
+      :root {
+        color-scheme: dark;
+        --accent: #fc7c9f;
+        --text: #f7f1e9;
+        --muted: #a89fb2;
+        --border: rgb(255 255 255 / 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        background: #080611;
+        color: var(--text);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .radar-stage {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        min-height: 100dvh;
+        padding: 80px 20px 64px;
+        background: radial-gradient(circle at 50% 18%, #2a1133, #080611 68%);
+      }
+
+      .top-pill {
+        position: fixed;
+        top: 20px;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 9999px;
+        background: rgb(255 255 255 / 0.1);
+        color: #fff;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        backdrop-filter: blur(12px);
+        transition: background-color 0.2s ease, transform 0.15s ease;
+      }
+
+      .back-link {
+        left: 20px;
+      }
+
+      .nav-right {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+        display: flex;
+        gap: 8px;
+      }
+
+      .nav-right .top-pill {
+        position: static;
+      }
+
+      .top-pill:hover,
+      .top-pill:focus-visible {
+        background: rgb(255 255 255 / 0.2);
+        outline: none;
+      }
+
+      .top-pill:active {
+        transform: scale(0.98);
+      }
+
+      .radar-card {
+        width: min(820px, 100%);
+        padding: 42px 38px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: rgb(16 12 28 / 0.74);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 24px 80px rgb(0 0 0 / 0.55);
+      }
+
+      .radar-eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: lowercase;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        color: #fff;
+        font-family: "Pricedown Bl", Impact, "Arial Black", sans-serif;
+        font-weight: 900;
+        font-size: clamp(44px, 7vw, 68px);
+        line-height: 0.92;
+        letter-spacing: 0.01em;
+        text-transform: lowercase;
+        -webkit-text-stroke: 4px #000;
+        paint-order: stroke fill;
+      }
+
+      .radar-intro {
+        margin: 0 0 24px;
+        color: #dfd8e6;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 24px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .filter-btn {
+        padding: 7px 14px;
+        border: 1px solid rgb(255 255 255 / 0.16);
+        border-radius: 9999px;
+        background: rgb(255 255 255 / 0.04);
+        color: var(--muted);
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      }
+
+      .filter-btn:hover,
+      .filter-btn:focus-visible {
+        border-color: var(--accent);
+        color: #fff;
+        outline: none;
+      }
+
+      .filter-btn.is-active {
+        border-color: rgb(252 124 159 / 0.5);
+        background: rgb(252 124 159 / 0.16);
+        color: #fff;
+      }
+
+      .posts-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .post-card {
+        display: block;
+        padding: 18px 20px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgb(255 255 255 / 0.03);
+        color: inherit;
+        text-decoration: none;
+        transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+      }
+
+      .post-card:hover,
+      .post-card:focus-visible {
+        border-color: rgb(252 124 159 / 0.45);
+        background: rgb(255 255 255 / 0.06);
+        transform: translateY(-2px);
+        outline: none;
+      }
+
+      .post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .post-tag {
+        padding: 3px 10px;
+        border: 1px solid rgb(252 124 159 / 0.3);
+        border-radius: 9999px;
+        background: rgb(252 124 159 / 0.1);
+        color: #f6dce6;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: lowercase;
+      }
+
+      .post-title {
+        margin: 0 0 6px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .post-summary {
+        margin: 0;
+        color: #cfc6d8;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .reader-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+        padding: 7px 14px;
+        border: 1px solid var(--border);
+        border-radius: 9999px;
+        background: rgb(255 255 255 / 0.06);
+        color: #fff;
+        font: inherit;
+        font-size: 13px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .reader-back:hover,
+      .reader-back:focus-visible {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .reader-title {
+        margin: 8px 0 18px;
+        font-size: clamp(26px, 4vw, 34px);
+        font-weight: 700;
+        line-height: 1.2;
+        color: #fff;
+      }
+
+      .reader-body {
+        color: #ddd6e4;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+
+      .reader-body h2,
+      .reader-body h3 {
+        margin: 26px 0 10px;
+        color: #fff;
+      }
+
+      .reader-body p {
+        margin: 0 0 16px;
+      }
+
+      .reader-body a {
+        color: var(--accent);
+      }
+
+      .reader-body code {
+        padding: 2px 6px;
+        border-radius: 5px;
+        background: rgb(255 255 255 / 0.08);
+        font-size: 0.9em;
+      }
+
+      .reader-body pre {
+        overflow-x: auto;
+        padding: 14px 16px;
+        border-radius: 10px;
+        background: rgb(8 6 14 / 0.9);
+        border: 1px solid var(--border);
+      }
+
+      .reader-body pre code {
+        padding: 0;
+        background: none;
+      }
+
+      .reader-body blockquote {
+        margin: 16px 0;
+        padding: 6px 16px;
+        border-left: 2px solid var(--accent);
+        color: #c7bdd1;
+      }
+
+      .reader-body img {
+        max-width: 100%;
+        border-radius: 10px;
+      }
+
+      .empty-state {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .radar-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .new-post-btn {
+        padding: 9px 16px;
+        border: 1px solid rgb(252 124 159 / 0.45);
+        border-radius: 9999px;
+        background: rgb(252 124 159 / 0.14);
+        color: #fff;
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .new-post-btn:hover,
+      .new-post-btn:focus-visible {
+        background: rgb(252 124 159 / 0.25);
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      dialog.owner-dialog {
+        width: min(560px, calc(100% - 24px));
+        padding: 28px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: #130f20;
+        color: var(--text);
+        box-shadow: 0 24px 80px rgb(0 0 0 / 0.75);
+      }
+
+      dialog.owner-dialog::backdrop {
+        background: rgb(5 3 10 / 0.75);
+        backdrop-filter: blur(6px);
+      }
+
+      .dialog-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+
+      .dialog-head h2 {
+        margin: 0;
+        font-size: 18px;
+        color: #fff;
+      }
+
+      .dialog-close {
+        padding: 6px 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: transparent;
+        color: var(--muted);
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .dialog-close:hover {
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      .owner-form {
+        display: grid;
+        gap: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      .field label {
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+      }
+
+      .field input,
+      .field textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: rgb(255 255 255 / 0.04);
+        color: #fff;
+        font: inherit;
+        font-size: 14px;
+      }
+
+      .field input:focus,
+      .field textarea:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .dialog-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      .btn-primary {
+        padding: 10px 18px;
+        border: 1px solid rgb(252 124 159 / 0.5);
+        border-radius: 9999px;
+        background: rgb(252 124 159 / 0.22);
+        color: #fff;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: rgb(252 124 159 / 0.34);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .btn-link {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--muted);
+        font: inherit;
+        font-size: 12px;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      .btn-link:hover {
+        color: var(--accent);
+      }
+
+      .form-status {
+        margin: 0;
+        font-size: 13px;
+        color: var(--accent);
+      }
+
+      @media (max-width: 600px) {
+        .radar-stage {
+          padding: 74px 14px 40px;
+        }
+
+        .radar-card {
+          padding: 28px 20px;
+        }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js" defer></script>
+  </head>
+  <body>
+    <main class="radar-stage">
+      <a class="top-pill back-link" href="index.html">← back</a>
+      <div class="nav-right">
+        <a class="top-pill" href="projects.html">projects</a>
+        <a class="top-pill" href="about.html">about</a>
+      </div>
+
+      <section class="radar-card" aria-labelledby="radar-title">
+        <div class="radar-header">
+          <div>
+            <p class="radar-eyebrow">public board</p>
+            <h1 id="radar-title">radar</h1>
+          </div>
+          <button class="new-post-btn" id="open-composer-btn" type="button">+ new post</button>
+        </div>
+        <p class="radar-intro">work for the day, what i plan to establish by doing so, and how it involves my interests — each update stays live for 24 hours.</p>
+
+        <div id="radar-feed-view">
+          <div class="posts-list" id="posts-list"></div>
+        </div>
+
+        <article id="radar-reader-view" hidden>
+          <a class="reader-back" href="radar.html">← all notes</a>
+          <div class="post-meta" id="reader-meta"></div>
+          <h2 class="reader-title" id="reader-title"></h2>
+          <div class="reader-body" id="reader-body"></div>
+        </article>
+      </section>
+    </main>
+
+    <dialog class="owner-dialog" id="owner-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-head">
+        <h2 id="dialog-title">owner post</h2>
+        <button class="dialog-close" id="close-dialog-btn" type="button">close</button>
+      </div>
+
+      <form class="owner-form" id="auth-form" hidden>
+        <p class="post-summary">Enter a GitHub Fine-Grained Token (with Contents: Read &amp; Write on your portfolio repo). Saved only in your browser.</p>
+        <div class="field">
+          <label for="gh-repo">GitHub Repo (owner/repo)</label>
+          <input id="gh-repo" type="text" value="0xunLin/portfolio" required>
+        </div>
+        <div class="field">
+          <label for="gh-branch">Branch</label>
+          <input id="gh-branch" type="text" value="main" required>
+        </div>
+        <div class="field">
+          <label for="gh-token">GitHub Personal Access Token</label>
+          <input id="gh-token" type="password" placeholder="github_pat_..." required>
+        </div>
+        <div class="dialog-actions">
+          <a class="btn-link" href="https://app.pagescms.org" target="_blank" rel="noopener noreferrer">or open pages cms ↗</a>
+          <button class="btn-primary" type="submit">unlock</button>
+        </div>
+      </form>
+
+      <form class="owner-form" id="post-form" hidden>
+        <div class="field">
+          <label for="post-title">Title</label>
+          <input id="post-title" type="text" placeholder="what i'm up to today" required>
+        </div>
+        <div class="field">
+          <label for="post-working">What I decided to work on</label>
+          <input id="post-working" type="text" placeholder="e.g. building the radar 24h status board" required>
+        </div>
+        <div class="field">
+          <label for="post-goal">What I plan to establish</label>
+          <input id="post-goal" type="text" placeholder="e.g. ship a lightweight daily log">
+        </div>
+        <div class="field">
+          <label for="post-interests">How it involves my interests</label>
+          <input id="post-interests" type="text" placeholder="e.g. minimal web design &amp; automation">
+        </div>
+        <div class="field">
+          <label for="post-body">Notes (Markdown)</label>
+          <textarea id="post-body" rows="4" placeholder="optional extra notes..."></textarea>
+        </div>
+        <p class="form-status" id="publish-status" hidden></p>
+        <div class="dialog-actions">
+          <button class="btn-link" id="reset-auth-btn" type="button">change token / repo</button>
+          <button class="btn-primary" id="publish-btn" type="submit">publish (24h)</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script>
+      const postsList = document.getElementById("posts-list");
+      const feedView = document.getElementById("radar-feed-view");
+      const readerView = document.getElementById("radar-reader-view");
+      const readerMeta = document.getElementById("reader-meta");
+      const readerTitle = document.getElementById("reader-title");
+      const readerBody = document.getElementById("reader-body");
+
+      const TTL_MS = 24 * 60 * 60 * 1000;
+      let allPosts = [];
+
+      function stripFrontmatter(raw) {
+        const match = raw.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+        return match ? raw.slice(match[0].length) : raw;
+      }
+
+      function isActive(post) {
+        const created = new Date(post.date).getTime();
+        if (Number.isNaN(created)) return false;
+        const age = Date.now() - created;
+        return age >= 0 && age < TTL_MS;
+      }
+
+      function formatStatusTime(dateStr) {
+        const created = new Date(dateStr).getTime();
+        const ageMs = Math.max(0, Date.now() - created);
+        const leftMs = Math.max(0, TTL_MS - ageMs);
+        const agoHrs = Math.floor(ageMs / 3600000);
+        const agoMins = Math.floor((ageMs % 3600000) / 60000);
+        const leftHrs = Math.floor(leftMs / 3600000);
+        const leftMins = Math.floor((leftMs % 3600000) / 60000);
+        const agoText = agoHrs > 0 ? `${agoHrs}h ${agoMins}m ago` : `${agoMins}m ago`;
+        const leftText = `${leftHrs}h ${leftMins}m left`;
+        return `${agoText} · ${leftText}`;
+      }
+
+      function renderFeed() {
+        const activePosts = allPosts.filter(isActive);
+        postsList.innerHTML = "";
+        if (activePosts.length === 0) {
+          const empty = document.createElement("p");
+          empty.className = "empty-state";
+          empty.textContent = "no active status right now.";
+          postsList.appendChild(empty);
+          return;
+        }
+
+        activePosts.forEach((post) => {
+          const card = document.createElement("a");
+          card.className = "post-card";
+          card.href = `radar.html?post=${encodeURIComponent(post.slug)}`;
+
+          const meta = document.createElement("div");
+          meta.className = "post-meta";
+          const date = document.createElement("span");
+          date.textContent = formatStatusTime(post.date);
+          meta.appendChild(date);
+
+          const title = document.createElement("h2");
+          title.className = "post-title";
+          title.textContent = post.title;
+
+          card.appendChild(meta);
+          card.appendChild(title);
+
+          const boardFields = [
+            ["working on", post.working_on],
+            ["goal", post.goal],
+            ["interests", post.interests],
+          ].filter(([, val]) => Boolean(val));
+
+          if (boardFields.length > 0) {
+            boardFields.forEach(([label, val]) => {
+              const row = document.createElement("p");
+              row.className = "post-summary";
+              const strong = document.createElement("strong");
+              strong.textContent = `${label}: `;
+              row.appendChild(strong);
+              row.appendChild(document.createTextNode(val));
+              card.appendChild(row);
+            });
+          } else if (post.summary) {
+            const summary = document.createElement("p");
+            summary.className = "post-summary";
+            summary.textContent = post.summary;
+            card.appendChild(summary);
+          }
+
+          postsList.appendChild(card);
+        });
+      }
+
+      async function openPost(slug) {
+        const post = allPosts.find((p) => p.slug === slug && isActive(p));
+        if (!post) {
+          feedView.hidden = false;
+          readerView.hidden = true;
+          renderFeed();
+          return;
+        }
+
+        feedView.hidden = true;
+        readerView.hidden = false;
+        readerTitle.textContent = post.title;
+        readerMeta.innerHTML = "";
+
+        const date = document.createElement("span");
+        date.textContent = formatStatusTime(post.date);
+        readerMeta.appendChild(date);
+
+        try {
+          const res = await fetch(`radar/posts/${encodeURIComponent(post.file)}`);
+          const markdown = stripFrontmatter(await res.text());
+          if (window.marked && window.DOMPurify) {
+            readerBody.innerHTML = window.DOMPurify.sanitize(window.marked.parse(markdown));
+          } else {
+            readerBody.textContent = markdown;
+          }
+        } catch {
+          readerBody.innerHTML = "<p class='empty-state'>could not load this note.</p>";
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const res = await fetch(`radar/index.json?t=${Date.now()}`);
+          allPosts = await res.json();
+        } catch {
+          allPosts = [];
+        }
+
+        const slug = new URLSearchParams(window.location.search).get("post");
+        if (slug) {
+          openPost(slug);
+        } else {
+          renderFeed();
+        }
+      });
+
+      const dialog = document.getElementById("owner-dialog");
+      const openComposerBtn = document.getElementById("open-composer-btn");
+      const closeDialogBtn = document.getElementById("close-dialog-btn");
+      const authForm = document.getElementById("auth-form");
+      const postForm = document.getElementById("post-form");
+      const resetAuthBtn = document.getElementById("reset-auth-btn");
+      const publishBtn = document.getElementById("publish-btn");
+      const publishStatus = document.getElementById("publish-status");
+
+      function getConfig() {
+        return {
+          repo: localStorage.getItem("radar_gh_repo") || "0xunLin/portfolio",
+          branch: localStorage.getItem("radar_gh_branch") || "main",
+          token: localStorage.getItem("radar_gh_token") || "",
+        };
+      }
+
+      function syncDialogMode() {
+        const cfg = getConfig();
+        const unlocked = Boolean(cfg.token);
+        authForm.hidden = unlocked;
+        postForm.hidden = !unlocked;
+        if (!unlocked) {
+          document.getElementById("gh-repo").value = cfg.repo;
+          document.getElementById("gh-branch").value = cfg.branch;
+        }
+      }
+
+      function toBase64Utf8(str) {
+        const bytes = new TextEncoder().encode(str);
+        let bin = "";
+        bytes.forEach((b) => { bin += String.fromCharCode(b); });
+        return btoa(bin);
+      }
+
+      function slugify(text) {
+        return text
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "") || "note";
+      }
+
+      async function githubPutFile(cfg, filePath, content, message) {
+        const url = `https://api.github.com/repos/${cfg.repo}/contents/${filePath}`;
+        const headers = {
+          Authorization: `Bearer ${cfg.token}`,
+          Accept: "application/vnd.github+json",
+          "Content-Type": "application/json",
+        };
+        let sha;
+        const existing = await fetch(`${url}?ref=${encodeURIComponent(cfg.branch)}`, { headers });
+        if (existing.ok) {
+          sha = (await existing.json()).sha;
+        }
+        const res = await fetch(url, {
+          method: "PUT",
+          headers,
+          body: JSON.stringify({
+            message,
+            content: toBase64Utf8(content),
+            branch: cfg.branch,
+            ...(sha ? { sha } : {}),
+          }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || `GitHub API error (${res.status})`);
+        }
+      }
+
+      openComposerBtn.addEventListener("click", () => {
+        publishStatus.hidden = true;
+        syncDialogMode();
+        dialog.showModal();
+      });
+
+      closeDialogBtn.addEventListener("click", () => dialog.close());
+
+      resetAuthBtn.addEventListener("click", () => {
+        localStorage.removeItem("radar_gh_token");
+        syncDialogMode();
+      });
+
+      authForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        localStorage.setItem("radar_gh_repo", document.getElementById("gh-repo").value.trim());
+        localStorage.setItem("radar_gh_branch", document.getElementById("gh-branch").value.trim());
+        localStorage.setItem("radar_gh_token", document.getElementById("gh-token").value.trim());
+        syncDialogMode();
+      });
+
+      postForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const cfg = getConfig();
+        const title = document.getElementById("post-title").value.trim();
+        const working_on = document.getElementById("post-working").value.trim();
+        const goal = document.getElementById("post-goal").value.trim();
+        const interests = document.getElementById("post-interests").value.trim();
+        const body = document.getElementById("post-body").value.trim();
+
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}-${pad(now.getMinutes())}`;
+        const slug = `${stamp}-${slugify(title)}`;
+        const file = `${slug}.md`;
+        const isoDate = now.toISOString();
+
+        const md = [
+          "---",
+          `title: ${JSON.stringify(title)}`,
+          `date: ${isoDate}`,
+          `working_on: ${JSON.stringify(working_on)}`,
+          `goal: ${JSON.stringify(goal)}`,
+          `interests: ${JSON.stringify(interests)}`,
+          "---",
+          "",
+          body,
+          "",
+        ].join("\n");
+
+        publishBtn.disabled = true;
+        publishStatus.hidden = false;
+        publishStatus.textContent = "publishing...";
+
+        try {
+          await githubPutFile(cfg, `radar/posts/${file}`, md, `radar: ${title}`);
+          const newEntry = { slug, file, title, date: isoDate, working_on, goal, interests, summary: "" };
+          const updatedPosts = [newEntry, ...allPosts];
+          await githubPutFile(cfg, "radar/index.json", JSON.stringify(updatedPosts, null, 2) + "\n", `radar: update index for ${title}`);
+          allPosts = updatedPosts;
+          postForm.reset();
+          publishStatus.hidden = true;
+          dialog.close();
+          feedView.hidden = false;
+          readerView.hidden = true;
+          renderFeed();
+        } catch (err) {
+          publishStatus.textContent = err.message || "failed to publish.";
+        } finally {
+          publishBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

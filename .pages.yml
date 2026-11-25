@@ -1,0 +1,33 @@
+media:
+  input: assets/radar
+  output: /assets/radar
+
+content:
+  - name: radar
+    label: Radar Notes
+    type: collection
+    path: radar/posts
+    filename: "{year}-{month}-{day}-{hour}-{minute}-{primary}.md"
+    view:
+      fields: [title, date]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: date
+        label: Timestamp
+        type: datetime
+        required: true
+      - name: working_on
+        label: What I decided to work on
+        type: string
+      - name: goal
+        label: What I plan to establish
+        type: string
+      - name: interests
+        label: How it involves my interests
+        type: string
+      - name: body
+        label: Notes
+        type: rich-text

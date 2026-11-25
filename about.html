@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080611">
+    <meta name="description" content="About priyantar jonak — NIT Silchar, resume, and contact.">
+    <title>about — priyantar jonak</title>
+    <link href="https://fonts.cdnfonts.com/css/pricedown" rel="stylesheet">
+    <style>
+      :root {
+        color-scheme: dark;
+        --accent: #fc7c9f;
+        --text: #f7f1e9;
+        --muted: #a89fb2;
+        --border: rgb(255 255 255 / 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        background: #080611;
+        color: var(--text);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .about-stage {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        min-height: 100dvh;
+        padding: 80px 20px 64px;
+        background: radial-gradient(circle at 50% 18%, #2a1133, #080611 68%);
+      }
+
+      .top-pill {
+        position: fixed;
+        top: 20px;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 9999px;
+        background: rgb(255 255 255 / 0.1);
+        color: #fff;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        backdrop-filter: blur(12px);
+        transition: background-color 0.2s ease, transform 0.15s ease;
+      }
+
+      .back-link {
+        left: 20px;
+      }
+
+      .resume-link {
+        right: 20px;
+      }
+
+      .top-pill:hover,
+      .top-pill:focus-visible {
+        background: rgb(255 255 255 / 0.2);
+        outline: none;
+      }
+
+      .top-pill:active {
+        transform: scale(0.98);
+      }
+
+      .about-card {
+        width: min(820px, 100%);
+        padding: 42px 38px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: rgb(16 12 28 / 0.74);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 24px 80px rgb(0 0 0 / 0.55);
+      }
+
+      .about-eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: lowercase;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        color: #fff;
+        font-family: "Pricedown Bl", Impact, "Arial Black", sans-serif;
+        font-weight: 900;
+        font-size: clamp(44px, 7vw, 68px);
+        line-height: 0.92;
+        letter-spacing: 0.01em;
+        text-transform: lowercase;
+        -webkit-text-stroke: 4px #000;
+        paint-order: stroke fill;
+      }
+
+      .about-bio {
+        margin: 0 0 24px;
+        color: #dfd8e6;
+        font-size: 19px;
+        line-height: 1.6;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        padding: 20px 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .meta-label {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--muted);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .meta-value {
+        font-size: 15px;
+        color: var(--text);
+      }
+
+      .meta-link {
+        color: var(--text);
+        text-decoration: none;
+        border-bottom: 1px solid rgb(252 124 159 / 0.5);
+        padding-bottom: 1px;
+        transition: color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .meta-link:hover,
+      .meta-link:focus-visible {
+        color: var(--accent);
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .section {
+        margin-top: 28px;
+      }
+
+      .section-title {
+        margin: 0 0 14px;
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .roles-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .roles-list li {
+        padding: 7px 13px;
+        border: 1px solid rgb(252 124 159 / 0.28);
+        border-radius: 9999px;
+        background: rgb(252 124 159 / 0.08);
+        color: #f6e8ee;
+        font-size: 13px;
+      }
+
+      .entry {
+        padding: 16px 0;
+        border-top: 1px solid rgb(255 255 255 / 0.07);
+      }
+
+      .entry:first-of-type {
+        padding-top: 4px;
+        border-top: 0;
+      }
+
+      .entry-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 6px 16px;
+      }
+
+      .entry-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .entry-date {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .entry-subtitle {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 4px 16px;
+        margin: 3px 0 10px;
+        color: #c8bfd2;
+        font-size: 14px;
+        font-style: italic;
+      }
+
+      .entry-bullets {
+        margin: 0;
+        padding-left: 18px;
+        color: #d6cedc;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .entry-bullets li + li {
+        margin-top: 6px;
+      }
+
+      .skills-list {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        color: #d6cedc;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .skills-list strong {
+        color: #fff;
+      }
+
+      @media (max-width: 600px) {
+        .about-stage {
+          padding: 74px 14px 40px;
+        }
+
+        .about-card {
+          padding: 28px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="about-stage">
+      <a class="top-pill back-link" href="index.html">← back</a>
+      <a
+        class="top-pill resume-link"
+        href="https://drive.google.com/file/d/1D6DCqfH5hfcGAio9aT6RJmcrx8txLclO/view?usp=drive_link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >resume pdf ↗</a>
+
+      <article class="about-card" aria-labelledby="about-title">
+        <p class="about-eyebrow">about</p>
+        <h1 id="about-title">priyantar jonak</h1>
+        <p class="about-bio">a lot of everything.</p>
+
+        <div class="meta-grid">
+          <div>
+            <span class="meta-label">College</span>
+            <span class="meta-value">NIT Silchar</span>
+          </div>
+          <div>
+            <span class="meta-label">Email</span>
+            <a class="meta-link" href="mailto:priyantarjonak9@gmail.com">priyantarjonak9@gmail.com</a>
+          </div>
+          <div>
+            <span class="meta-label">GitHub</span>
+            <a class="meta-link" href="https://github.com/0xunLin" target="_blank" rel="noopener noreferrer">github.com/0xunLin</a>
+          </div>
+        </div>
+
+        <section class="section" aria-labelledby="roles-heading">
+          <h2 class="section-title" id="roles-heading">Interested Roles</h2>
+          <ul class="roles-list">
+            <li>software developer or software engineer</li>
+            <li>infrastructure and platform engineer</li>
+            <li>site reliability engineer</li>
+            <li>AI development intern</li>
+          </ul>
+        </section>
+
+        <section class="section" aria-labelledby="education-heading">
+          <h2 class="section-title" id="education-heading">Education</h2>
+          <div class="entry">
+            <div class="entry-header">
+              <h3 class="entry-title">National Institute of Technology Silchar</h3>
+            </div>
+            <div class="entry-subtitle">
+              <span>Bachelor of Technology in Electronics and Communication Engineering, July 2023 – July 2027</span>
+              <span>Assam, India</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="experience-heading">
+          <h2 class="section-title" id="experience-heading">Work Experience</h2>
+
+          <div class="entry">
+            <div class="entry-header">
+              <h3 class="entry-title">Commit Verification Platform (CVP) – S. N. Bose Summer Internship</h3>
+              <span class="entry-date">June 2026 – July 2026</span>
+            </div>
+            <div class="entry-subtitle">
+              <span>Summer Intern (Under Dr. Malaya Dutta Borah)</span>
+              <span>NIT Silchar, Assam</span>
+            </div>
+            <ul class="entry-bullets">
+              <li>Architected a full-stack commit attestation protocol with <strong>Next.js</strong>, <strong>TypeScript</strong>, <strong>PostgreSQL (Drizzle ORM)</strong> and a five-node <strong>LangGraph</strong> agent on <strong>Gemini 3.5 Flash</strong>, enabling developers to verify feature completion on private repos without exposing source code or GitHub credentials.</li>
+              <li>Implemented dual-layer RBAC via disjoint PostgreSQL foreign keys and two isolated <strong>Auth.js v5</strong> engines: stateless, session-held GitHub OAuth JWTs for zero-custody commit reads, and passwordless email magic links with database adapters. Delivered real-time execution feedback through synchronous <strong>NDJSON streams</strong> with execution deadlines and <code>AbortSignal</code> propagation.</li>
+              <li>Engineered three-layer deterministic evaluation guardrails: citation grounding against tool-call logs, regex/substring source-code non-leakage filters, and randomized numeric fence delimiters against prompt injection.</li>
+              <li>Benchmarked offline evaluation across 30 claims reduced observed false approvals and rejections to zero and passed 7/7 prompt-injection tests.</li>
+            </ul>
+          </div>
+
+          <div class="entry">
+            <div class="entry-header">
+              <h3 class="entry-title">Gluon Gold (AOSSIE)</h3>
+              <span class="entry-date">August 2025 – October 2025</span>
+            </div>
+            <div class="entry-subtitle">
+              <span>Open Source Contributor</span>
+              <span>Remote</span>
+            </div>
+            <ul class="entry-bullets">
+              <li>Optimized the Gluon-Ergo-UI swap interface by refactoring <code>ReactorSwap.tsx</code> to implement a mobile-first responsive layout, resolve component overlaps, and ensure seamless stacking on small screens.</li>
+              <li>Improved the user experience by conditionally hiding redundant input fields during token fusion and adding stricter input validation to prevent transactions exceeding wallet balances.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="projects-heading">
+          <h2 class="section-title" id="projects-heading">Projects</h2>
+
+          <div class="entry">
+            <div class="entry-header">
+              <h3 class="entry-title">Recruise | LLM-Assisted GitHub Repository Evaluation Platform</h3>
+              <span class="entry-date">October 2026</span>
+            </div>
+            <ul class="entry-bullets">
+              <li>Built a <strong>React</strong> and <strong>FastAPI</strong> platform that evaluates candidate GitHub repositories against configurable job rubrics, returning structured scores with file-level evidence to support human review.</li>
+              <li>Developed an asynchronous ingestion pipeline with <strong>Celery</strong> and <strong>Redis</strong> using Tree-sitter for syntax-aware code chunking and <strong>PostgreSQL (pgvector)</strong> with <strong>HNSW indexing</strong> for semantic code retrieval.</li>
+              <li>Implemented a <strong>LangGraph</strong> evaluation workflow that produces structured, schema-validated assessments and evidence-linked explanations for each rubric criterion.</li>
+              <li>Added tenant-scoped authorization and read-only <strong>FastMCP</strong> tools, enabling interactive searches across repositories associated with applications having authorized access and GitHub rate-limiting.</li>
+            </ul>
+          </div>
+
+          <div class="entry">
+            <div class="entry-header">
+              <h3 class="entry-title">Coin Smith | Bitcoin Transaction &amp; Compliance Engine</h3>
+              <span class="entry-date">April 2026</span>
+            </div>
+            <ul class="entry-bullets">
+              <li>Built a full-stack Partially Signed Bitcoin Transaction (PSBT) builder with an interactive <strong>JavaScript/HTML</strong> interface to construct, analyze, and broadcast bitcoin transactions.</li>
+              <li>Implemented Greedy, Branch and Bound, and Knapsack UTXO selection algorithms; interactive byte-level fee breakdowns; dust-donation optimization; and a Child-Pays-For-Parent (CPFP) fee accelerator for stuck mempool transactions.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="skills-heading">
+          <h2 class="section-title" id="skills-heading">Skills</h2>
+          <div class="skills-list">
+            <div><strong>Languages &amp; Tools:</strong> Python, PostgreSQL (pgvector), React, FastAPI, AWS (EC2, ECS, RDS, S3, Elastic Load Balancing), Node.js, Redis, Docker, Git</div>
+            <div><strong>Core Competencies:</strong> Computer Networking, Operating Systems, Database Management Systems, Object-Oriented Programming, APIs, LLM Orchestration</div>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="achievements-heading">
+          <h2 class="section-title" id="achievements-heading">Achievements</h2>
+          <ul class="entry-bullets">
+            <li>Planned and developed Triphla as part of a four-member team for the Google Solution Challenge 2025, generating 500+ unique site visits.</li>
+            <li>Secured second runner-up at the Fastweb Hackathon, showcasing collaborative innovation and rapid execution.</li>
+          </ul>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080611">
+    <meta name="description" content="Projects — priyantar jonak.">
+    <title>projects — priyantar jonak</title>
+    <link href="https://fonts.cdnfonts.com/css/pricedown" rel="stylesheet">
+    <style>
+      :root {
+        color-scheme: dark;
+        --accent: #fc7c9f;
+        --text: #f7f1e9;
+        --muted: #a89fb2;
+        --border: rgb(255 255 255 / 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        background: #080611;
+        color: var(--text);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .projects-stage {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        min-height: 100dvh;
+        padding: 80px 20px 64px;
+        background: radial-gradient(circle at 50% 18%, #2a1133, #080611 68%);
+      }
+
+      .top-pill {
+        position: fixed;
+        top: 20px;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 9999px;
+        background: rgb(255 255 255 / 0.1);
+        color: #fff;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+        backdrop-filter: blur(12px);
+        transition: background-color 0.2s ease, transform 0.15s ease;
+      }
+
+      .back-link {
+        left: 20px;
+      }
+
+      .about-link {
+        right: 20px;
+      }
+
+      .top-pill:hover,
+      .top-pill:focus-visible {
+        background: rgb(255 255 255 / 0.2);
+        outline: none;
+      }
+
+      .top-pill:active {
+        transform: scale(0.98);
+      }
+
+      .projects-card {
+        width: min(920px, 100%);
+        padding: 42px 38px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: rgb(16 12 28 / 0.74);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 24px 80px rgb(0 0 0 / 0.55);
+      }
+
+      .projects-eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        text-transform: lowercase;
+      }
+
+      h1 {
+        margin: 0 0 28px;
+        color: #fff;
+        font-family: "Pricedown Bl", Impact, "Arial Black", sans-serif;
+        font-weight: 900;
+        font-size: clamp(44px, 7vw, 68px);
+        line-height: 0.92;
+        letter-spacing: 0.01em;
+        text-transform: lowercase;
+        -webkit-text-stroke: 4px #000;
+        paint-order: stroke fill;
+      }
+
+      .projects-list {
+        display: grid;
+        gap: 24px;
+      }
+
+      .project-item {
+        display: grid;
+        grid-template-columns: minmax(240px, 340px) 1fr;
+        gap: 24px;
+        padding: 22px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgb(255 255 255 / 0.03);
+      }
+
+      .project-thumb {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        border: 1px solid rgb(255 255 255 / 0.14);
+        border-radius: 10px;
+        background: #0d0a16;
+      }
+
+      .project-thumb img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.25s ease;
+      }
+
+      .project-thumb:hover img {
+        transform: scale(1.03);
+      }
+
+      .project-thumb--placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: radial-gradient(circle at 50% 30%, #2a1133, #0d0a16 78%);
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .project-thumb--placeholder span {
+        font-family: "Pricedown Bl", Impact, "Arial Black", sans-serif;
+        font-size: 36px;
+        letter-spacing: 0.02em;
+        text-transform: lowercase;
+      }
+
+      .project-thumb--placeholder small {
+        color: var(--accent);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .project-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .project-title {
+        margin: 0 0 8px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .project-desc {
+        margin: 0;
+        color: #d6cedc;
+        font-size: 14px;
+        line-height: 1.65;
+      }
+
+      .project-note {
+        margin: 10px 0 0;
+        padding: 8px 12px;
+        border-left: 2px solid var(--accent);
+        background: rgb(252 124 159 / 0.08);
+        color: #f0dde6;
+        font-size: 13px;
+        line-height: 1.5;
+        border-radius: 0 6px 6px 0;
+      }
+
+      .project-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .project-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border: 1px solid rgb(255 255 255 / 0.18);
+        border-radius: 9999px;
+        background: rgb(255 255 255 / 0.06);
+        color: #fff;
+        font-size: 13px;
+        text-decoration: none;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .project-link--primary {
+        border-color: rgb(252 124 159 / 0.45);
+        background: rgb(252 124 159 / 0.14);
+      }
+
+      .project-link:hover,
+      .project-link:focus-visible {
+        background: rgb(255 255 255 / 0.16);
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      @media (max-width: 720px) {
+        .projects-stage {
+          padding: 74px 14px 40px;
+        }
+
+        .projects-card {
+          padding: 28px 20px;
+        }
+
+        .project-item {
+          grid-template-columns: 1fr;
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="projects-stage">
+      <a class="top-pill back-link" href="index.html">← back</a>
+      <a class="top-pill about-link" href="about.html">about →</a>
+
+      <section class="projects-card" aria-labelledby="projects-title">
+        <p class="projects-eyebrow">selected work</p>
+        <h1 id="projects-title">projects</h1>
+
+        <div class="projects-list">
+          <article class="project-item">
+            <a class="project-thumb" href="https://coin-smith-o6sa.onrender.com/" target="_blank" rel="noopener noreferrer">
+              <img src="assets/coin-smith.png" alt="Coin Smith web interface screenshot">
+            </a>
+            <div class="project-body">
+              <div>
+                <h2 class="project-title">Coin Smith</h2>
+                <p class="project-desc">
+                  A high-precision Bitcoin UTXO manager &amp; PSBT builder. Optimized for fee efficiency (BnB/Knapsack), privacy analysis, and wallet safety. Supports RBF, Locktime, Taproot, and CPFP. Includes a web visualizer and CLI to justify and verify secure transactions. Bitcoin protocol-first correctness and defensive validation.
+                </p>
+              </div>
+              <div class="project-links">
+                <a class="project-link project-link--primary" href="https://coin-smith-o6sa.onrender.com/" target="_blank" rel="noopener noreferrer">live demo ↗</a>
+                <a class="project-link" href="https://github.com/0xunLin/Coin-Smith" target="_blank" rel="noopener noreferrer">github ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-item">
+            <a class="project-thumb" href="https://chain-lens-adr8.onrender.com/" target="_blank" rel="noopener noreferrer">
+              <img src="assets/chain-lens.png" alt="Chain Lens 95 web interface screenshot">
+            </a>
+            <div class="project-body">
+              <div>
+                <h2 class="project-title">Chain Lens</h2>
+                <p class="project-desc">
+                  Chain Lens 95: A retro-styled Bitcoin transaction and block analyzer. Features a robust Python engine for deep technical inspection and a Windows 95-inspired web UI that translates complex blockchain data into plain-English stories. Purely local, private, and protocol-focused.
+                </p>
+                <p class="project-note">
+                  Note: Processing a single transaction will work fine with 250 MB of RAM, but attempting to process full block data might fail due to memory limits.
+                </p>
+              </div>
+              <div class="project-links">
+                <a class="project-link project-link--primary" href="https://chain-lens-adr8.onrender.com/" target="_blank" rel="noopener noreferrer">live demo ↗</a>
+                <a class="project-link" href="https://github.com/0xunLin/Chain-Lens" target="_blank" rel="noopener noreferrer">github ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-item">
+            <a class="project-thumb" href="https://sherlock-1-o4vj.onrender.com/" target="_blank" rel="noopener noreferrer">
+              <img src="assets/sherlock.jpg" alt="Sherlock chain analysis engine screenshot">
+            </a>
+            <div class="project-body">
+              <div>
+                <h2 class="project-title">Sherlock</h2>
+                <p class="project-desc">
+                  Sherlock is a Bitcoin chain analysis engine and web visualizer. It applies heuristics to raw block data to infer patterns and classify transaction behaviors, generating detailed JSON and Markdown reports.
+                </p>
+                <p class="project-note">
+                  Note: A few of the features are being developed and might not work.
+                </p>
+              </div>
+              <div class="project-links">
+                <a class="project-link project-link--primary" href="https://sherlock-1-o4vj.onrender.com/" target="_blank" rel="noopener noreferrer">live demo ↗</a>
+                <a class="project-link" href="https://github.com/0xunLin/Sherlock" target="_blank" rel="noopener noreferrer">github ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-item">
+            <a class="project-thumb" href="https://triphla.vercel.app/" target="_blank" rel="noopener noreferrer">
+              <img src="assets/triphla.jpg" alt="Triphla web interface screenshot">
+            </a>
+            <div class="project-body">
+              <div>
+                <h2 class="project-title">Triphla</h2>
+                <p class="project-desc">
+                  Triphla is a comprehensive AI-powered financial education platform specifically designed for mastering the Indian financial market. The project serves as an intelligent ecosystem for investors and learners alike, integrating real-time market intelligence for major indices with advanced AI-driven portfolio analytics.
+                </p>
+              </div>
+              <div class="project-links">
+                <a class="project-link project-link--primary" href="https://triphla.vercel.app/" target="_blank" rel="noopener noreferrer">live demo ↗</a>
+                <a class="project-link" href="https://github.com/0xunLin/triphla" target="_blank" rel="noopener noreferrer">github ↗</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
