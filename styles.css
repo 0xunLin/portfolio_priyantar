@@ -50,7 +50,7 @@ body {
   user-select: none;
   transform-origin: center;
   will-change: transform, opacity, filter, clip-path;
-  transition: filter 0.2s ease;
+  transition: filter 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .gta-hotspot {
@@ -66,11 +66,26 @@ body {
   outline-offset: 4px;
 }
 
+.gta-layer--gal,
+.gta-layer--raul {
+  filter:
+    drop-shadow(0 0 2px #fff)
+    drop-shadow(0 0 3.5px #fff)
+    drop-shadow(0 0 9px rgb(255 255 255 / 0.35))
+    saturate(1.06)
+    brightness(1.02);
+}
+
 .gta-poster-stage:has(.gta-hotspot--gal:hover) .gta-layer--gal,
 .gta-poster-stage:has(.gta-hotspot--gal:focus-visible) .gta-layer--gal,
 .gta-poster-stage:has(.gta-hotspot--raul:hover) .gta-layer--raul,
 .gta-poster-stage:has(.gta-hotspot--raul:focus-visible) .gta-layer--raul {
-  filter: drop-shadow(0 0 18px rgb(252 124 159 / 0.55)) brightness(1.06);
+  filter:
+    drop-shadow(0 0 2.5px #fff)
+    drop-shadow(0 0 5px #fff)
+    drop-shadow(0 0 16px rgb(255 255 255 / 0.6))
+    saturate(1.12)
+    brightness(1.08);
 }
 
 .gta-wordmark {

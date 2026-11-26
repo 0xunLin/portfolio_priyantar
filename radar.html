@@ -373,6 +373,10 @@
         border-color: var(--accent);
       }
 
+      [hidden] {
+        display: none !important;
+      }
+
       .owner-form {
         display: grid;
         gap: 14px;
@@ -667,25 +671,69 @@
         date.textContent = formatStatusTime(post.date);
         readerMeta.appendChild(date);
 
+        const boardRows = [
+          ["working on", post.working_on],
+          ["goal", post.goal],
+          ["interests", post.interests],
+        ].filter(([, val]) => Boolean(val));
+
+        let rawMarkdown = "";
+        const cfg = getConfig();
         try {
-          const res = await fetch(`radar/posts/${encodeURIComponent(post.file)}`);
-          const markdown = stripFrontmatter(await res.text());
-          if (window.marked && window.DOMPurify) {
-            readerBody.innerHTML = window.DOMPurify.sanitize(window.marked.parse(markdown));
+          const remote = await githubGetFile(cfg, `radar/posts/${post.file}`);
+          if (remote) {
+            rawMarkdown = remote.text;
           } else {
-            readerBody.textContent = markdown;
+            const res = await fetch(`radar/posts/${encodeURIComponent(post.file)}?t=${Date.now()}`, { cache: "no-store" });
+            if (res.ok) rawMarkdown = await res.text();
           }
         } catch {
-          readerBody.innerHTML = "<p class='empty-state'>could not load this note.</p>";
+          rawMarkdown = "";
+        }
+
+        readerBody.innerHTML = "";
+        if (boardRows.length > 0) {
+          const box = document.createElement("blockquote");
+          boardRows.forEach(([label, val]) => {
+            const p = document.createElement("p");
+            const strong = document.createElement("strong");
+            strong.textContent = `${label}: `;
+            p.appendChild(strong);
+            p.appendChild(document.createTextNode(val));
+            box.appendChild(p);
+          });
+          readerBody.appendChild(box);
+        }
+
+        const markdown = stripFrontmatter(rawMarkdown).trim();
+        if (markdown) {
+          const notesWrap = document.createElement("div");
+          if (window.marked && window.DOMPurify) {
+            notesWrap.innerHTML = window.DOMPurify.sanitize(window.marked.parse(markdown));
+          } else {
+            notesWrap.textContent = markdown;
+          }
+          readerBody.appendChild(notesWrap);
         }
       }
 
       window.addEventListener("DOMContentLoaded", async () => {
+        const cfg = getConfig();
         try {
-          const res = await fetch(`radar/index.json?t=${Date.now()}`);
-          allPosts = await res.json();
+          const remote = await githubGetFile(cfg, "radar/index.json");
+          if (remote) {
+            allPosts = JSON.parse(remote.text);
+          } else {
+            const res = await fetch(`radar/index.json?t=${Date.now()}`, { cache: "no-store" });
+            allPosts = await res.json();
+          }
         } catch {
-          allPosts = [];
+          try {
+            const res = await fetch(`radar/index.json?t=${Date.now()}`, { cache: "no-store" });
+            allPosts = await res.json();
+          } catch {
+            allPosts = [];
+          }
         }
 
         const slug = new URLSearchParams(window.location.search).get("post");
@@ -731,6 +779,13 @@
         return btoa(bin);
       }
 
+      function fromBase64Utf8(b64) {
+        const clean = b64.replace(/\s+/g, "");
+        const bin = atob(clean);
+        const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+        return new TextDecoder().decode(bytes);
+      }
+
       function slugify(text) {
         return text
           .toLowerCase()
@@ -738,21 +793,34 @@
           .replace(/^-|-$/g, "") || "note";
       }
 
-      async function githubPutFile(cfg, filePath, content, message) {
+      async function githubGetFile(cfg, filePath) {
+        const url = `https://api.github.com/repos/${cfg.repo}/contents/${filePath}?ref=${encodeURIComponent(cfg.branch)}`;
+        const headers = { Accept: "application/vnd.github+json" };
+        if (cfg.token) {
+          headers.Authorization = `Bearer ${cfg.token}`;
+        }
+        const res = await fetch(url, { headers, cache: "no-store" });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return { sha: data.sha, text: fromBase64Utf8(data.content || "") };
+      }
+
+      async function githubPutFile(cfg, filePath, content, message, knownSha) {
         const url = `https://api.github.com/repos/${cfg.repo}/contents/${filePath}`;
         const headers = {
           Authorization: `Bearer ${cfg.token}`,
           Accept: "application/vnd.github+json",
           "Content-Type": "application/json",
         };
-        let sha;
-        const existing = await fetch(`${url}?ref=${encodeURIComponent(cfg.branch)}`, { headers });
-        if (existing.ok) {
-          sha = (await existing.json()).sha;
+        let sha = knownSha;
+        if (!sha) {
+          const existing = await githubGetFile(cfg, filePath);
+          if (existing) sha = existing.sha;
         }
         const res = await fetch(url, {
           method: "PUT",
           headers,
+          cache: "no-store",
           body: JSON.stringify({
             message,
             content: toBase64Utf8(content),
@@ -822,9 +890,17 @@
 
         try {
           await githubPutFile(cfg, `radar/posts/${file}`, md, `radar: ${title}`);
+          const latestIndex = await githubGetFile(cfg, "radar/index.json");
+          const currentPosts = latestIndex ? JSON.parse(latestIndex.text) : allPosts;
           const newEntry = { slug, file, title, date: isoDate, working_on, goal, interests, summary: "" };
-          const updatedPosts = [newEntry, ...allPosts];
-          await githubPutFile(cfg, "radar/index.json", JSON.stringify(updatedPosts, null, 2) + "\n", `radar: update index for ${title}`);
+          const updatedPosts = [newEntry, ...currentPosts.filter((p) => p.slug !== slug)];
+          await githubPutFile(
+            cfg,
+            "radar/index.json",
+            JSON.stringify(updatedPosts, null, 2) + "\n",
+            `radar: update index for ${title}`,
+            latestIndex ? latestIndex.sha : undefined
+          );
           allPosts = updatedPosts;
           postForm.reset();
           publishStatus.hidden = true;
